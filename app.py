@@ -1,14 +1,16 @@
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-
+from configuration import db, bcrypt, ApplicationConfig
 
 app = Flask(__name__)
-app.secret_key = 'unhSADAdDh9'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-db: SQLAlchemy = SQLAlchemy(app)
+app.config.from_object(ApplicationConfig)
+db.init_app(app)
+bcrypt.init_app(app)
 
-bcrypt = Bcrypt(app)
+
+@app.route('/createDB')
+def createDB():
+    db.create_all()
+    return 'DB created!'
 
 @app.route('/')
 def hello_world():  # put application's code here
