@@ -1,4 +1,6 @@
-from app import db
+from configuration import db, mm
+from marshmallow import Schema, fields
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -11,3 +13,14 @@ class User(db.Model):
     country = db.Column(db.String(100))
     city = db.Column(db.String(100))
     verified = db.Column(db.Boolean, default="false")
+
+    class UserSchema(mm.Schema):
+        id = fields.Number()
+        first_name = fields.Str()
+        last_name = fields.Str()
+        address = fields.Str()
+        password = fields.Str()
+        email = fields.Str()
+        phone = fields.Str()
+        country = fields.Str()
+        city = fields.Str()
