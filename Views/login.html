@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>LogIn</title>
+    <style>
+        * {
+            font-family: 'Trebuchet MS';
+            color: darkgreen;
+        }
+    
+        h1 {
+            text-align: center;
+        } 
+        h2 {
+            text-align: center;
+        }
+    
+        hr {
+            width: 65%;
+            border: 1px solid black;
+        }
+    
+        div.container {
+            width: 30%;
+            height: 350px;
+            background-color: rgba(98, 98, 98, 0.50);
+            padding: 5px;
+            margin: auto;
+            text-align: center;
+        }
+    
+        input[type="text"] {
+            background-color: gold;
+        }
+    
+        input[type="password"] {
+            background-color: gold;
+        }
+    
+        input[type="submit"] {
+            margin-left: 10px;
+            width: 85px;
+            height: 30px;
+            color: darkgreen;
+            border-radius: 8px 6px;
+        }
+    
+            input[type="submit"]:hover {
+                color: gold;
+                background-color: darkgreen;
+            }
+    
+        p
+        {
+            display: inline;
+            font-size: 12.5px;
+        }
+        a
+        {
+            font-size: 12.5px;
+        }
+    </style>
+
+</head>
+
+<body>
+<h1>WELCOME TO CRYPTO EXCANGE</h1>
+<hr>
+<div class="container">
+    <br />
+    <h2>Log In</h2>
+    <br />
+        <form method="post">
+            <label>Email:</label>
+            <input type="text" name="email" />
+            <br />
+            <br />
+            <label>Password:</label>
+            <input type="password" name="password" />
+            <br />
+            <br />
+            <input type="submit" value="LogIn" />
+        </form>
+        <br />
+        <p>Dont have an account?</p>
+        <a href="Register.html">Register now</a>
+</div>
+</body>
+
+</html>

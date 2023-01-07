@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>Transactions</title>
+
+<style>
+
+   * {
+        font-family: 'Trebuchet MS';
+        
+    }
+
+    h1 {
+        text-align: center;
+        color: darkgreen;
+    }
+
+    hr {
+        width: 75%;
+        border: 1px solid black;
+    }
+
+    h2 {
+        margin-left: 10px;
+        color: darkgreen;
+        display: inline-block;
+    }
+
+    div.table {
+        vertical-align: top;
+        background-color: rgba(98, 98, 98, 0.50);
+        width: 45%;
+        height: 40%;
+        padding: 5px;
+        display: inline-block;
+        margin-left: 1.5%;
+        color: darkgreen;
+    }
+
+    div.container {
+        width: 100%;
+    }
+
+    div.functions {
+        background-color: rgba(98, 98, 98, 0.50);
+        width: 30%;
+        height: 483px;
+        display: inline-block;
+        margin-left: 12%;
+        color: darkgreen;
+        position: relative;
+    }
+
+    div.buttons
+    {
+        width: 25%;
+        height: 405px;
+        margin-left: 82.5%;
+    }
+
+    div.meni {
+        width: 12%;
+        position: absolute;
+        display: inline-block;
+    }
+
+    div.valutes
+    {
+        background-color: white;
+        width: 70%;
+        height: 405px;
+        margin-left: 1%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        float: left;
+    }
+
+    table
+    {
+        width: 100%;
+        height: 100%;
+        border-collapse: collapse;
+    }
+    tr
+    {
+        border-bottom: 1px solid black;
+    }
+
+    td
+    {
+        text-align: center;
+    }
+
+    input[type="text"]
+    {
+        width: 25%;
+    }
+
+    input[type="number"]
+    {
+        width: 20%;
+    }
+
+    input[type="number"]#import
+    {
+        width: 40%;
+    }
+
+    input[type="submit"]
+    {
+        width: 20%;
+    }
+
+    input[type="submit"]#filter
+    {
+        margin-left: 0.1%;
+        width: 30%;
+        margin-left: 50%;
+    }
+
+    input[type="submit"]#sort
+    {
+        margin-left: 0.1%;
+        width: 30%;
+    }
+
+    input[type="submit"]#import
+    {
+        width: 20%;
+    }
+
+    label#sort
+    {
+        font-size: 14px;
+    }
+
+    label
+    {
+        font-size: 12px;
+    }
+
+    label#to2
+    {
+        margin-left: 4%;
+        font-size: 12.5px;
+    }
+
+    label#amount
+    {
+        margin-left: 11%;
+        font-size: 12.5px;
+    }
+
+    label#to
+    {
+        margin-left: 6%;
+        font-size: 12.5px;
+    }
+
+    label#amount3
+    {
+        margin-left: 9%;
+        font-size: 12.5px;
+    }
+
+
+    label#amount2
+    {
+        margin-left: 15%;
+        font-size: 12.5px;
+    }
+
+    label#curr
+    {
+        margin-left: 12%;
+        font-size: 12.5px;
+    }
+
+    label#curr2
+    {
+        margin-left: 14%;
+        font-size: 12.5px;
+    }
+
+    select
+    {
+        width: 25%;
+    }
+
+    select#second
+    {
+       margin-left: 0.1%; 
+       width: 45%;
+    }
+
+    div.send
+    {
+        border: 2px solid black;
+        width: 90%;
+        height: 130px;
+        margin: 0 auto;
+        position: relative;
+        margin-top: 2.5%;
+        padding: 3px;
+    }
+
+    div.import
+    {
+        border: 2px solid black;
+        width: 90%;
+        height: 130px;
+        margin: 0 auto;
+        position: relative;
+        padding: 3px;
+    }
+
+    div.exchange
+    {
+        border: 2px solid black;
+        width: 90%;
+        height: 130px;
+        margin: 0 auto;
+        position: relative;
+        padding: 3px;
+    }
+
+    div.sort
+    {
+        width: 100%;
+        height: 135px;
+        margin-left: -40%;
+        border-bottom: 2px solid black;
+        border-top: 2px solid black;
+
+    }
+
+    div.filter
+    {
+        width: 100%;
+        height: 270px;
+        margin-left: -40%;
+    }
+
+    button.meni {
+        background-color: rgba(17, 17, 17, 0.65);
+        color: gold;
+        width: 100%;
+        height: 50px;
+    }
+
+    button.meni:hover
+    {
+        color: antiquewhite;
+    }
+
+    p
+    {
+        display: inline-block;
+    }
+
+
+</style>
+
+</head>
+
+<body>
+
+<div class="meni">
+    <form method="post">
+        <button class="meni" type="submit" name="logout" value="Log">LogOut</button>
+    </form>
+</div>
+<h1>YOUR CRYPTO</h1>
+<hr>
+<div class="container">
+    <div class="functions">
+        <div class="send">
+            <h4>Transfer</h4>
+            <form method="post">
+                <input type="text">
+                <input type="number">
+                <select name="valutes">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+                <input type="submit" value="transfer">
+            </form>
+            <label id="to">Transfer to</label>
+            <label id="amount">Amount</label>
+            <label id="curr">Currency</label>
+        </div>
+        <br>
+        <div class="import">
+            <h4>Import money from credit card</h4>
+            <form method="post">
+                <input type="number" id="import">
+                <input type="submit" value="import" id="import">
+            </form>
+            <label id="amount2">Amount</label>
+        </div>
+        <br>
+        <div class="exchange">
+            <h4>Currency exchange</h4>
+            <form method="post">
+                <input type="number">
+                <select name="valutesb">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+                <select name="valutess">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+                <input type="submit" value="exchange">
+            </form>
+            <label id="to2">Transfer to</label>
+            <label id="amount3">Amount</label>
+            <label id="curr2">Currency</label>
+        </div>
+      
+    </div>
+
+    <div class="table">
+        <h2>Much money:</h2>
+        &nbsp;&nbsp;&nbsp;<p>ukupan broj novca</p>
+        <div class="valutes">
+            <table>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+
+                </tr>
+               
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+
+                </tr>
+
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="buttons">
+           <div class="sort">
+            <br>
+            <label id="sort">Sort by amount of money</label>
+            <br>
+            <form>
+                <label>asc</label>
+                <input type="checkbox" value="asc">
+                <label>desc</label>
+                <input type="checkbox" value="desc">
+                <input id="sort" type="submit" value="sort">
+            </form>
+            <br>
+            <label id="sort">Sort by transaction status</label>
+            <form>
+                <label>asc</label>
+            <input type="checkbox" value="asc">
+            <label>desc</label>
+                <input type="checkbox" value="desc">
+                <input id="sort" type="submit" value="sort">
+            </form>
+           </div>
+           <div class="filter">
+            <br>
+            <form>
+                <label id="sort">Currency</label>
+                <select id="second">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+                <br>
+                <br>
+                <label id="sort">Min/Max value</label>
+                <br>
+                <label>Min</label>
+                <input type="radio" >
+                <label>Max</label>
+                <input type="radio" >
+                <br>
+                <br>
+                <label id="sort">Status</label>
+                <br>
+                <label>Processing</label>
+                <input type="checkbox">
+                <label>Processed</label>
+                <input type="checkbox">
+                <label>Rejected</label>
+                <input type="checkbox">
+                <input id="filter" type="submit" value="filter">
+            </form>
+           </div>
+        </div>
+    </div>
+    </div>
+
+    </body>
+
+</html>
+
