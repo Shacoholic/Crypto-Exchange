@@ -3,6 +3,8 @@ from configuration import db, bcrypt, ApplicationConfig
 from models.models import User, Account, Transaction, CryptoCurrency, CreditCard
 from flask_session import Session
 import random
+import requests
+import json
 
 app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
@@ -19,6 +21,134 @@ def createDB():
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!'
+
+
+@app.route("/showCryptoCurrencies")
+def showCryptoCurrencies():
+    header = {
+        "Accepts": "application/json",
+        "X-CMC_PRO_API_KEY": "4ceb685b-2766-45cc-8127-147c64386639"
+    }
+
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+    s = requests.Session()
+    s.headers.update(header)
+    response = s.get(url)
+    json_response = response.json()
+    cryptolist = json.dumps(addingToList(json_response["data"]))
+    return cryptolist, 200
+
+@app.route("/exchange", methods=["PATCH"])
+def exchange():
+    selling = request.json["selling"]
+    buying = request.json["buying"]
+    amount = request.json["amount"]
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+    account = user.account
+
+    price = gettingPrice(selling, buying)
+
+    paying_sum = price * amount
+
+    if selling == "USD":
+        if paying_sum > account.amount:
+            return jsonify({"error": "Not enough money on account"})
+        account.amount -= paying_sum
+        crypto_currencies = account.crypto_currencies
+        iterator = filter(lambda x: x.crypto_currency_name == buying, crypto_currencies)
+
+        crypto_currencies = list(iterator)
+        if crypto_currencies == []:
+            newCryptoCurrency(buying, amount, account)
+        else:
+            cryptoCurrencyUpdate(buying, amount, crypto_currencies)
+    elif buying == "USD":
+        crypto_currencies = account.crypto_currencies
+        crypto_currency = next(
+            filter(lambda x: x.crypto_currency_name == selling, crypto_currencies), None)
+
+        if crypto_currency == None:
+            return jsonify({"error": "You dont have this crypto"})
+
+        if paying_sum > crypto_currency.crypto_currency_amount:
+            return jsonify({"error": "You dont have enough crypto"})
+        crypto_currency.crypto_currency_amount -= paying_sum
+        account.amount += amount
+        db.session.commit()
+    else:
+        crypto_currencies = account.crypto_currencies
+        crypto_currency = next(
+            filter(lambda x: x.crypto_currency_name == selling, crypto_currencies), None)
+
+        if crypto_currency == None:
+            return jsonify({"error": "You dont have this crypto"})
+
+        if paying_sum > crypto_currency.crypto_currency_amount:
+            return jsonify({"error": "You dont have enough crypto"})
+        crypto_currency.crypto_currency_amount -= paying_sum
+        crypto_currencies = account.crypto_currencies
+        iterator = filter(lambda x: x.crypto_currency_name == buying, crypto_currencies)
+        crypto_currencies = list(iterator)
+        if crypto_currencies == []:
+            newCryptoCurrency(buying, amount, account)
+        else:
+            cryptoCurrencyUpdate(buying, amount, crypto_currencies)
+
+
+    return Response(status=200)
+
+def gettingPrice(selling, buying):
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+    if(buying == "USD"):
+        parameters = {"symbol": selling, "convert": buying}
+    else:
+        parameters = {"symbol": buying, "convert": selling}
+
+    headers = {
+        "Accepts": "application/json",
+        "X-CMC_PRO_API_KEY": "4ceb685b-2766-45cc-8127-147c64386639"
+    }
+    sess = requests.Session()
+    sess.headers.update(headers)
+    response = sess.get(url, params=parameters)
+
+    if (buying == "USD"):
+        price = response.json()["data"][selling]["quote"][buying]["price"]
+        price = 1 / price
+    else:
+        price = response.json()["data"][buying]["quote"][selling]["price"]
+
+    return price
+
+def cryptoCurrencyUpdate(crypto_currency_name, crypto_currency_amount, crypto_currencies):
+    crypto_currency = next(filter(lambda x: x.crypto_currency_name == crypto_currency_name, crypto_currencies),
+                           None)
+    crypto_currency.crypto_currency_amount += crypto_currency_amount
+    db.session.commit()
+    return
+
+
+def newCryptoCurrency(crypto_currency_name, crypto_currency_amount, crypto_account):
+    crypto_currency = CryptoCurrency(crypto_currency_amount=crypto_currency_amount,
+                                     crypto_currency_name=crypto_currency_name,
+                                     account_id=crypto_account.id)
+    db.session.add(crypto_currency)
+    db.session.commit()
+    return
+
+def addingToList(data):
+    crypto_value_list = []
+    for crypto in data:
+        symbol = str(crypto["symbol"])
+        name = str(crypto["name"])
+        price = crypto["quote"]["USD"]["price"]
+        crypto_value_list.append({
+            "name": name,
+            "symbol": symbol,
+            "price": price
+        })
+    return crypto_value_list
 
 #posle kreiranja crypto accounta mora da se izvrsi verifikacija
 @app.route('/verification', methods=["POST"])
