@@ -2,7 +2,7 @@
 
 <head>
 
-<title>Home</title>
+<title>Transactions</title>
 
 <style>
 
@@ -13,7 +13,7 @@
 
     h1 {
         text-align: center;
-        color: darkgreen;
+        color: rgb(100, 0, 0);
     }
 
     hr {
@@ -21,15 +21,9 @@
         border: 1px solid black;
     }
 
-    hr.table
-    {
-        width: 100%;
-        border: 1px solid black;
-    }
-
     h2 {
         margin-left: 10px;
-        color: darkgreen;
+        color: rgb(100, 0, 0);
         display: inline-block;
     }
 
@@ -41,7 +35,7 @@
         padding: 5px;
         display: inline-block;
         margin-left: 1.5%;
-        color: darkgreen;
+        color: rgb(100, 0, 0);
     }
 
     div.container {
@@ -54,13 +48,13 @@
         height: 483px;
         display: inline-block;
         margin-left: 12%;
-        color: darkgreen;
+        color: rgb(100, 0, 0);
         position: relative;
     }
 
     div.buttons
     {
-        width: 15%;
+        width: 25%;
         height: 405px;
         margin-left: 82.5%;
     }
@@ -74,7 +68,7 @@
     div.valutes
     {
         background-color: white;
-        width: 80%;
+        width: 70%;
         height: 405px;
         margin-left: 1%;
         overflow-y: auto;
@@ -118,9 +112,32 @@
         width: 20%;
     }
 
+    input[type="submit"]#filter
+    {
+        margin-left: 0.1%;
+        width: 30%;
+        margin-left: 50%;
+    }
+
+    input[type="submit"]#sort
+    {
+        margin-left: 0.1%;
+        width: 30%;
+    }
+
     input[type="submit"]#import
     {
         width: 20%;
+    }
+
+    label#sort
+    {
+        font-size: 14px;
+    }
+
+    label
+    {
+        font-size: 12px;
     }
 
     label#to2
@@ -171,6 +188,12 @@
         width: 25%;
     }
 
+    select#second
+    {
+       margin-left: 0.1%; 
+       width: 45%;
+    }
+
     div.send
     {
         border: 2px solid black;
@@ -202,9 +225,26 @@
         padding: 3px;
     }
 
+    div.sort
+    {
+        width: 100%;
+        height: 135px;
+        margin-left: -40%;
+        border-bottom: 2px solid black;
+        border-top: 2px solid black;
+
+    }
+
+    div.filter
+    {
+        width: 100%;
+        height: 270px;
+        margin-left: -40%;
+    }
+
     button.meni {
         background-color: rgba(17, 17, 17, 0.65);
-        color: gold;
+        color: rgb(255, 0, 0);
         width: 100%;
         height: 50px;
     }
@@ -212,6 +252,7 @@
     button.meni:hover
     {
         color: antiquewhite;
+        background-color: black;
     }
 
     p
@@ -292,33 +333,77 @@
                 <tr>
                     <td>1</td>
                     <td>2</td>
+                    <td>3</td>
 
                 </tr>
                
                 <tr>
                     <td>1</td>
                     <td>2</td>
+                    <td>3</td>
 
                 </tr>
 
                 <tr>
                     <td>1</td>
                     <td>2</td>
+                    <td>3</td>
 
                 </tr>
             </table>
         </div>
         <div class="buttons">
-            <button class="meni">All curency</button>
+           <div class="sort">
             <br>
+            <label id="sort">Sort by amount of money</label>
             <br>
-            <button class="meni">My transactions</button>
+            <form>
+                <label>asc</label>
+                <input type="checkbox" value="asc">
+                <label>desc</label>
+                <input type="checkbox" value="desc">
+                <input id="sort" type="submit" value="sort">
+            </form>
             <br>
+            <label id="sort">Sort by transaction status</label>
+            <form>
+                <label>asc</label>
+            <input type="checkbox" value="asc">
+            <label>desc</label>
+                <input type="checkbox" value="desc">
+                <input id="sort" type="submit" value="sort">
+            </form>
+           </div>
+           <div class="filter">
             <br>
-            <button class="meni">My profile</button>
-            <br>
-            <br>
-            <button class="meni">My crypto</button>
+            <form>
+                <label id="sort">Currency</label>
+                <select id="second">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+                <br>
+                <br>
+                <label id="sort">Min/Max value</label>
+                <br>
+                <label>Min</label>
+                <input type="radio" >
+                <label>Max</label>
+                <input type="radio" >
+                <br>
+                <br>
+                <label id="sort">Status</label>
+                <br>
+                <label>Processing</label>
+                <input type="checkbox">
+                <label>Processed</label>
+                <input type="checkbox">
+                <label>Rejected</label>
+                <input type="checkbox">
+                <input id="filter" type="submit" value="filter">
+            </form>
+           </div>
         </div>
     </div>
     </div>
