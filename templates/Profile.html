@@ -126,56 +126,56 @@
         <hr>
         <div class="container">
             <h2>Edit Profile</h2>
-            <form method="post" enctype="multipart/form-data">
+            <form action="http://127.0.0.1:5000/changeUserData" method="post" enctype="multipart/form-data">
                 <div class="slika">
-                    <img src="~/Files/@path" id="output" />
+                    <img src="~\Files\{{ folder }}\{{ file }}" id="output" />
                 </div>
                 <input type="file" name="image" accept="image/*" id="file" onchange="loadFile(event)" />
 
                 <div class="tekst">
-                    <label>Name :</label>
+                    <label>Name : {{ name }}</label>
                     <br />
-                    <label>Surname :</label>
+                    <label>Surname : {{ surname }}</label>
                     <br />
-                    <label>City :</label>
+                    <label>City : {{ city }}</label>
                     <br />
-                    <label>Country :</label>
+                    <label>Country : {{ country }}</label>
                     <br />
-                    <label>Adress :</label>
+                    <label>Adress : {{ address }}</label>
                     <br />
-                    <label>Phone number: </label>
+                    <label>Phone number: {{ number }}</label>
                     <br />
                 </div>
                     <div class="izmena">
                         <hr />
                         <br />
                         <label>Name:</label>
-                        <input type="text" name="Name"/>
+                        <input type="text" name="Name" value="{{ name }}"/>
                         <br />
                         <br />
                         <br />
                         <label>Surname:</label>
-                        <input type="text" name="Surname"/>
+                        <input type="text" name="Surname" value="{{ surname }}"/>
                         <br />
                         <br />
                         <br />
                         <label>Country:</label>
-                        <input type="text" name="Country"/>
+                        <input type="text" name="Country" value="{{ country }}"/>
                         <br>
                         <br />
                         <br />
                         <label>City:</label>
-                        <input type="text" name="City"/>
+                        <input type="text" name="City" value="{{ city }}"/>
                         <br>
                         <br />
                         <br />
                         <label>Adress:</label>
-                        <input type="text" name="Adress"/>
+                        <input type="text" name="Adress" value="{{ address }}"/>
                         <br>
                         <br />
                         <br />
                         <label>Phone number:</label>
-                        <input type="number" name="Phone"/>
+                        <input type="number" name="Phone" value="{{ number }}"/>
                         <br>
                         <br />
                         <br />

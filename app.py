@@ -1,7 +1,10 @@
-from flask import Flask, jsonify, request, Response, session
+from flask import Flask, jsonify, request, Response, session, redirect, url_for
 from configuration import db, bcrypt, ApplicationConfig
 from models.models import User, Account, Transaction, CryptoCurrency, CreditCard
 from flask_session import Session
+from urllib.parse import urlencode
+import glob
+import os
 import random
 import requests
 import json
@@ -12,16 +15,14 @@ db.init_app(app)
 bcrypt.init_app(app)
 Session(app)
 
+@app.route('/')
+def hello_world():
+    return 'Hello world'
 
 @app.route('/createDB')
 def createDB():
     db.create_all()
     return 'DB created!'
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
-
 
 @app.route("/showCryptoCurrencies")
 def showCryptoCurrencies():
@@ -153,10 +154,10 @@ def addingToList(data):
 #posle kreiranja crypto accounta mora da se izvrsi verifikacija
 @app.route('/verification', methods=["POST"])
 def verification():
-    number = request.json["number"]
-    first_name = request.json["first_name"]
-    expiration_date = request.json["expiration_date"]
-    security_code = request.json["security_code"]
+    number = request.form["Card"]
+    first_name = request.form["Name"]
+    expiration_date = request.form["Date"]
+    security_code = request.form["Code"]
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
@@ -172,7 +173,7 @@ def verification():
         db.session.commit()
         create_crypto_account(user)
 
-        return "verified", 200
+        return redirect('http://127.0.0.1:5002/', code=307)
     else:
         return "already verified", 200
 
@@ -204,16 +205,16 @@ def transfer_money_to_account():
         return jsonify({"error": "Not enough money on a card"})
 
 
-@app.route('/register', methods=["POST"])#moramo doraditi poziv kad se dogovorimo za frontend
+@app.route('/register', methods=['POST', 'GET'])#moramo doraditi poziv kad se dogovorimo za frontend
 def register():
-    firstName = request.json["firstName"]
-    lastName = request.json["lastName"]
-    address = request.json["address"]
-    city = request.json["city"]
-    country = request.json["country"]
-    phone = request.json["phone"]
-    email = request.json["email"]
-    password = request.json["password"]
+    firstName = request.form["Name"]
+    lastName = request.form["Surname"]
+    address = request.form["Adress"]
+    city = request.form["City"]
+    country = request.form["Country"]
+    phone = request.form["Phone"]
+    email = request.form["email"]
+    password = request.form["pass"]
 
     hash_password = bcrypt.generate_password_hash(password).decode('utf8')
 
@@ -235,13 +236,12 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    return Response(status=200)
-
+    return redirect('http://127.0.0.1:5002/verify', code=307)
 
 @app.route("/login", methods=["POST"])
 def login():
-    email = request.json["email"]
-    password = request.json["password"]
+    email = request.form["email"]
+    password = request.form["pass"]
 
     user = User.query.filter_by(email=email).first()
     if user is None:
@@ -250,42 +250,77 @@ def login():
     if not bcrypt.check_password_hash(user.password, password):
         return  jsonify({"error":"Unauthorized"})
     session["user_id"] = user.id
-
     #dodata linija za verifikaciju koji oni moraju hendlovati na frontendu, stranica za unos kreditne kartice
-    if user.verified == False:
-        return jsonify({"error": "Not Verified"})
+   # if user.verified == False:
+     #   return redirect('http://127.0.0.1:5002/verify', code=307)
 
-    return Response(status=200)
+    return redirect('http://127.0.0.1:5002/home', code=307)
 
 @app.route("/logout", methods=["POST"])
 def logout():
 
     session.pop("user_id", None)
-    return  Response(status=200)
+    return redirect('http://127.0.0.1:5002/', code=307)
 
-@app.route("/changeUserData", methods=["PUT"])
+@app.route('/getCurrentUser', methods=['GET', 'POST'])
+def getCurrentUser():
+
+    id = session.get("user_id")
+    user = User.query.get(id)
+
+    path = r"C:\Users\Nebojsa\Documents\GitHub\Crypto-Exchange\templates\Files" + "\\" + user.email
+    image = ""
+    if os.path.exists(path):
+        for file in os.listdir(path):
+            image = file
+            break
+
+    filename = os.path.basename(image)
+    imagepath = user.email + "\\" + filename
+
+    dicti = {
+        "Name": user.first_name,
+        "Surname": user.last_name,
+        "Country": user.country,
+        "City": user.city,
+        "Address": user.address,
+        "PhoneNumber": user.phone,
+        "Image": imagepath
+    }
+
+    redirect_baseUrl = "http://127.0.0.1:5002/profile"
+    redirect_url = redirect_baseUrl + ("?" + urlencode(dicti) if dicti else "")
+    return redirect(redirect_url)
+
+@app.route("/changeUserData", methods=["PUT", "GET", "POST"])
 def change_user_data():
+
     id = session.get("user_id")
 
     user = User.query.get(id)
 
-    user.first_name = request.json["firstName"]
-    user.last_name = request.json["lastName"]
-    user.address = request.json["address"]
-    user.city = request.json["city"]
-    user.country = request.json["country"]
-    user.phone = request.json["phone"]
-    user.email = request.json["email"]
-    user.password = request.json["password"]
-
-    email_exists = User.query.filter_by(email=user.email).count()
-    user.password = bcrypt.generate_password_hash(user.password)
-
-    if email_exists > 1:
-        return jsonify({"error":"Email already in use"}), 409
+    user.first_name = request.form["Name"]
+    user.last_name = request.form["Surname"]
+    user.address = request.form["Adress"]
+    user.city = request.form["City"]
+    user.country = request.form["Country"]
+    user.phone = request.form["Phone"]
 
     db.session.commit()
-    return Response(status=200)
+
+    image = request.files['image']
+    newpath = r'C:\Users\Nebojsa\Documents\GitHub\Crypto-Exchange\\templates\Files' + '\\' + user.email
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+
+    path = newpath + '\\*'
+    files = glob.glob(path)
+    for f in files:
+        os.remove(f)
+
+    image.save(os.path.join(newpath + '\\' + image.filename))
+
+    return redirect('http://127.0.0.1:5002/home', code=307)
 
 @app.route("/check_session_working")
 def check_session_working():
@@ -298,7 +333,7 @@ def status_account_check():
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     crypto_acc = user.account
-    return jsonify({"amount": crypto_acc.amount})
+    return redirect("")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)

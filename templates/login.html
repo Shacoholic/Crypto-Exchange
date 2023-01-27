@@ -3,6 +3,33 @@
 <head>
 
     <title>LogIn</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+    <script>
+        function FormValidateL()
+        {
+            var email = document.LForm.email.value;
+            var passw = document.LForm.pass.value;
+
+             if(email == "")
+            {
+                event.preventDefault();
+                swal("Error!","Email should not be empty","error")
+                email.focus();
+                return false;
+            }
+
+             if(passw == "")
+            {
+                event.preventDefault();
+                swal("Error!","Password should not be empty","error");
+                passw.focus();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
     <style>
         * {
             font-family: 'Trebuchet MS';
@@ -71,20 +98,20 @@
     <br />
     <h2>Login</h2>
     <br />
-        <form method="post">
+        <form action="http://127.0.0.1:5000/login" name="LForm" method="post" onsubmit="return FormValidateL();">
             <label>Email:</label>
             <input type="text" name="email" />
             <br />
             <br />
             <label>Password:</label>
-            <input type="password" name="password" />
+            <input type="password" name="pass" />
             <br />
             <br />
-            <input type="submit" value="LogIn" />
+            <input type="submit" value="LogIn" name="submit" />
         </form>
         <br />
         <p>Dont have an account?</p>
-        <a href="Register.html">Register now</a>
+        <a href="/registerLink">Register now</a>
 </div>
 </body>
 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>Register</title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function FormValidate()
+        {
+            var name = document.RForm.Name.value;
+            var surname = document.RForm.Surname.value;
+            var adress = document.RForm.Adress.value;
+            var city = document.RForm.City.value;
+            var country = document.RForm.City.value;
+            var phone = document.RForm.Phone.value;
+            var email = document.RForm.email.value;
+            var passw = document.RForm.pass.value;
+
+            if(name == "")
+            {
+                event.preventDefault();
+                swal("Error!","Name should not be empty","error")
+                name.focus();
+                return false;
+            }
+            else {
+                var letters = /^[A-Za-z]+$/;
+                if (!document.RForm.Name.value.match(letters)) {
+                    event.preventDefault();
+                    swal("Error!","User name must have alphabet characters only","error");
+                    name.focus();
+                    return false;
+
+                }
+            }
+
+            if(surname == "")
+            {
+                event.preventDefault();
+                swal("Error!","Surname should not be empty","error")
+                surname.focus();
+                return false;
+            }
+            else {
+               // var letters = /^[A-Za-z]+$/;
+                if (!document.RForm.Surname.value.match(letters)) {
+                    event.preventDefault();
+                    swal("Error!","User surname must have alphabet characters only","error");
+                    surname.focus();
+                    return false;
+
+                }
+            }
+
+            if(adress == "")
+            {
+                event.preventDefault();
+                swal("Error!","Adress should not be empty","error")
+                adress.focus();
+                return false;
+            }
+            else {
+                var lettersanum = /^[0-9a-zA-Z]+$/;
+                if (!document.RForm.Adress.value.match(lettersanum)) {
+                    event.preventDefault();
+                    swal("Error!","User address must have alphanumeric characters only","error");
+                    adress.focus();
+                    return false;
+
+                }
+            }
+
+           if(city == "")
+            {
+                event.preventDefault();
+                swal("Error!","City should not be empty","error")
+                city.focus();
+                return false;
+            }
+            else {
+               // var letters = /^[A-Za-z]+$/;
+                if (!document.RForm.City.value.match(letters)) {
+                    event.preventDefault();
+                    swal("Error!","User city must have alphabet characters only","error");
+                    city.focus();
+                    return false;
+
+                }
+            }
+
+            if(country == "")
+            {
+                event.preventDefault();
+                swal("Error!","Country should not be empty","error")
+                country.focus();
+                return false;
+            }
+            else {
+               // var letters = /^[A-Za-z]+$/;
+                if (!document.RForm.Country.value.match(letters)) {
+                    event.preventDefault();
+                    swal("Error!","User country must have alphabet characters only","error");
+                    country.focus();
+                    return false;
+
+                }
+            }
+
+            if(surname == "")
+            {
+                event.preventDefault();
+                swal("Error!","Surname should not be empty","error")
+                surname.focus();
+                return false;
+            }
+
+             if(email == "")
+            {
+                event.preventDefault();
+                swal("Error!","Email should not be empty","error")
+                email.focus();
+                return false;
+            }
+            else
+             {
+                 var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                 if(!document.RForm.email.value.match(emailformat))
+                 {
+                    event.preventDefault();
+                    swal("Error!","You have entered an invalid email address!","error");
+                    email.focus();
+                    return false;
+                }
+             }
+
+             if(passw == "")
+            {
+                event.preventDefault();
+                swal("Error!","Password should not be empty","error");
+                passw.focus();
+                return false;
+            }
+            else
+             {
+             var passwLen = document.RForm.pass.value.length;
+             if(passwLen <= 7 || passwLen >= 12)
+            {
+                event.preventDefault();
+                swal("Error!","Password length must be between \"5\" to \"12 characters","error");
+                passw.focus();
+                return false;
+            }
+             }
+
+            return true;
+        }
+    </script>
+<style>
+    * {
+        font-family: 'Trebuchet MS';
+        color: rgb(100, 0, 0);
+    }
+
+    h1 {
+        text-align: center;
+    }
+    h2 {
+        text-align: center;
+    }
+
+    hr {
+        width: 65%;
+        border: 1px solid black;
+    }
+
+    div.container {
+        width: 30%;
+        height: 580px;
+        background-color: rgba(98, 98, 98, 0.50);
+        padding: 5px;
+        margin: auto;
+        text-align: center;
+    }
+
+    input[type="text"] {
+        background-color: gold;
+    }
+
+    input[type="text"] {
+        background-color: gold;
+    }
+
+    input[type="password"] {
+        background-color: gold;
+    }
+
+    input[type="submit"] {
+        margin-left: 10px;
+        width: 85px;
+        height: 30px;
+        color: rgb(100, 0, 0);
+        border-radius: 8px 6px;
+    }
+
+        input[type="submit"]:hover {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0);
+        }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>WELCOME TO CRYPTO EXCANGE</h1>
+<hr>
+<div class="container">
+    <h2>Register</h2>
+        <br>
+        <form action="http://127.0.0.1:5000/register" method="post" name="RForm" id="RFOR" onsubmit="return FormValidate();">
+            <label>Name:</label>
+            <input type="text" name="Name" />
+            <br />
+            <br />
+            <label>Surname:</label>
+            <input type="text" name="Surname" />
+            <br />
+            <br />
+            <label>Adress:</label>
+            <input type="text" name="Adress" />
+            <br />
+            <br />
+            <label>City:</label>
+            <input type="text" name="City" />
+            <br />
+            <br />
+            <label>Country:</label>
+            <input type="text" name="Country" />
+            <br />
+            <br />
+            <label>Phone number:</label>
+            <input type="number" name="Phone" />
+            <br />
+            <br />
+            <label>Email:</label>
+            <input type="text" name="email" />
+            <br />
+            <br />
+            <label>Password:</label>
+            <input type="password" name="pass" />
+            <br />
+            <br />
+            <br />
+            &nbsp;&nbsp;
+            <input type="submit" value="Register" id="reg"/>
+        </form>
+        <br />
+        <br />
+        <a href="login.html">Back</a>
+
+</div>
+
+</body>
+
+</html>

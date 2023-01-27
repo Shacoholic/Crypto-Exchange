@@ -229,7 +229,7 @@
 <body>
 
 <div class="meni">
-    <form method="post">
+    <form action="/logout" method="post">
         <button class="meni" type="submit" name="logout" value="Log">LogOut</button>
     </form>
 </div>
@@ -317,8 +317,9 @@
             <button class="meni">My transactions</button>
             <br>
             <br>
-            <button class="meni">My profile</button>
-            <br>
+            <form action="http://127.0.0.1:5000/getCurrentUser" method="post">
+            <button type="submit" class="meni">My profile</button>
+                </form>
             <br>
             <button class="meni">My crypto</button>
         </div>

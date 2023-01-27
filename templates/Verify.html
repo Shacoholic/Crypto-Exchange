@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Verify</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+    <script>
+        function FormValidateV()
+        {
+            var cnumber = document.VForm.Card.value;
+            var name = document.VForm.Name.value;
+            var date = document.VForm.Date.value;
+            var seccode = document.VForm.Code.value;
+
+             if(cnumber == "")
+            {
+                event.preventDefault();
+                swal("Error!","Card number should not be empty","error")
+                cnumber.focus();
+                return false;
+            }
+
+             if(name == "")
+            {
+                event.preventDefault();
+                swal("Error!","Name should not be empty","error");
+                name.focus();
+                return false;
+            }
+              else {
+                 var letters = /^[A-Za-z]+$/;
+                 if (!document.VForm.Name.value.match(letters)) {
+                     event.preventDefault();
+                     swal("Error!", "Card name must have alphabet characters only", "error");
+                     name.focus();
+                     return false;
+
+                 }
+             }
+
+            if(date == "")
+            {
+                event.preventDefault();
+                swal("Error!","Expiry date should not be empty","error")
+                date.focus();
+                return false;
+            }
+
+             if(seccode == "")
+            {
+                event.preventDefault();
+                swal("Error!","Security code should not be empty","error")
+                seccode.focus();
+                return false;
+            }
+
+
+            return true;
+        }
+    </script>
+<style>
+    * {
+        font-family: 'Trebuchet MS';
+        color: rgb(100, 0, 0);
+    }
+
+    h1 {
+        text-align: center;
+    }
+    h2 {
+        text-align: center;
+    }
+
+    hr {
+        width: 65%;
+        border: 1px solid black;
+    }
+
+    div.container {
+        width: 30%;
+        height: 380px;
+        background-color: rgba(98, 98, 98, 0.50);
+        padding: 5px;
+        margin: auto;
+        text-align: center;
+    }
+
+    input[type="text"] {
+        background-color: gold;
+    }
+
+    input[type="text"] {
+        background-color: gold;
+    }
+
+    input[type="password"] {
+        background-color: gold;
+    }
+
+    input[type="submit"] {
+        margin-left: 10px;
+        width: 85px;
+        height: 30px;
+        color: rgb(100, 0, 0);
+        border-radius: 8px 6px;
+    }
+
+        input[type="submit"]:hover {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0);
+        }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>WELCOME TO CRYPTO EXCANGE</h1>
+<hr>
+<div class="container">
+    <h2>Verify your card</h2>
+        <br>
+        <form action="http://127.0.0.1:5000/verification" method="post" name="VForm" onsubmit="return FormValidateV();">
+            <label>Card number:</label>
+            <input type="number" name="Card" />
+            <br />
+            <br />
+            <label>Name:</label>
+            <input type="text" name="Name" />
+            <br />
+            <br />
+            <label>Expiry date:</label>
+            <input type="date" name="Date" />
+            <br />
+            <br />
+            <label>Security code:</label>
+            <input type="number" name="Code" />
+            <br />
+            <br />
+            <br />
+            &nbsp;&nbsp;
+            <input type="submit" value="Verify" />
+        </form>
+
+</div>
+
+</body>
+
+</html>
