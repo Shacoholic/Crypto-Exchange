@@ -262,6 +262,7 @@ def logout():
     session.pop("user_id", None)
     return redirect('http://127.0.0.1:5002/', code=307)
 
+#Metoda za dobavljanje trenutnog korisnika, potrebno radi izmene profila
 @app.route('/getCurrentUser', methods=['GET', 'POST'])
 def getCurrentUser():
 

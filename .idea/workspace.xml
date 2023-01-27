@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7638a37b-c311-41b2-b593-37033269d07c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Crypto-Exchange.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Crypto-Exchange.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/MyCrypto.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Profile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Transactions.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Verify.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/login.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/database.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +205,7 @@
       <workItem from="1674555261708" duration="11905000" />
       <workItem from="1674587117528" duration="37256000" />
       <workItem from="1674746082036" duration="18771000" />
-      <workItem from="1674811105511" duration="7040000" />
+      <workItem from="1674811105511" duration="7260000" />
     </task>
     <servers />
   </component>
