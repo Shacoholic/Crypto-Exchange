@@ -1,7 +1,15 @@
+import _thread
+import time
+from multiprocessing import Process
+from queue import Queue
+
+import sqlalchemy
 from flask import Flask, jsonify, request, Response, session
 from configuration import db, bcrypt, ApplicationConfig
+from models import StateEnum
 from models.models import User, Account, Transaction, CryptoCurrency, CreditCard
 from flask_session import Session
+import _sha3
 import random
 import requests
 import json
@@ -17,6 +25,7 @@ Session(app)
 def createDB():
     db.create_all()
     return 'DB created!'
+
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -37,6 +46,7 @@ def showCryptoCurrencies():
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
     return cryptolist, 200
+
 
 @app.route("/exchange", methods=["PATCH"])
 def exchange():
@@ -95,12 +105,12 @@ def exchange():
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
 
-
     return Response(status=200)
+
 
 def gettingPrice(selling, buying):
     url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-    if(buying == "USD"):
+    if (buying == "USD"):
         parameters = {"symbol": selling, "convert": buying}
     else:
         parameters = {"symbol": buying, "convert": selling}
@@ -121,6 +131,7 @@ def gettingPrice(selling, buying):
 
     return price
 
+
 def cryptoCurrencyUpdate(crypto_currency_name, crypto_currency_amount, crypto_currencies):
     crypto_currency = next(filter(lambda x: x.crypto_currency_name == crypto_currency_name, crypto_currencies),
                            None)
@@ -137,6 +148,7 @@ def newCryptoCurrency(crypto_currency_name, crypto_currency_amount, crypto_accou
     db.session.commit()
     return
 
+
 def addingToList(data):
     crypto_value_list = []
     for crypto in data:
@@ -150,7 +162,8 @@ def addingToList(data):
         })
     return crypto_value_list
 
-#posle kreiranja crypto accounta mora da se izvrsi verifikacija
+
+# posle kreiranja crypto accounta mora da se izvrsi verifikacija
 @app.route('/verification', methods=["POST"])
 def verification():
     number = request.json["number"]
@@ -160,13 +173,13 @@ def verification():
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
-
-    if(user.verified == False and number == 4242424242424242 and first_name == user.first_name and expiration_date == "02/23" and security_code == 123):
+    if (
+            user.verified == False and number == 4242424242424242 and first_name == user.first_name and expiration_date == "02/23" and security_code == 123):
         money_amount = random.randint(1000, 3000)
         money_amount -= 1
-        credit_card = CreditCard(credit_card_holder_name = user.first_name,
-                                   money_amount=money_amount,
-                                   user=user)
+        credit_card = CreditCard(credit_card_holder_name=user.first_name,
+                                 money_amount=money_amount,
+                                 user=user)
         user.verified = True
         db.session.add(credit_card)
         db.session.commit()
@@ -177,25 +190,26 @@ def verification():
         return "already verified", 200
 
 
-#posle ovoga moze da uplatni sredstva na online racun - posebna stranica i metoda
+# posle ovoga moze da uplatni sredstva na online racun - posebna stranica i metoda
 def create_crypto_account(user):
     account = Account(amount=0,
-                                   crypto_currencies=[],
-                                   user_id=user.id,
-                                   user=user)
+                      crypto_currencies=[],
+                      user_id=user.id,
+                      user=user)
 
     db.session.add(account)
     db.session.commit()
     return
 
-#prebacivanje novca na crypto racun
+
+# prebacivanje novca na crypto racun
 @app.route('/transfer_money_to_account', methods=["POST"])
 def transfer_money_to_account():
     amount = request.json["amount"]
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
-    if(user.credit_card.money_amount >= amount):
+    if (user.credit_card.money_amount >= amount):
         user.credit_card.money_amount -= amount
         user.account.amount += amount
         db.session.commit()
@@ -204,7 +218,116 @@ def transfer_money_to_account():
         return jsonify({"error": "Not enough money on a card"})
 
 
-@app.route('/register', methods=["POST"])#moramo doraditi poziv kad se dogovorimo za frontend
+def mining(transaction_id, crypto_currency, amount, q):
+    time.sleep(5*60)
+
+    engine = sqlalchemy.create_engine(
+        'mysql+mysqlconnector://root:1234@db/mysql_db'
+    )
+    local_session = sqlalchemy.orm.Session(bind=engine)
+    transaction = local_session.query(Transaction).get(transaction_id)
+    user = local_session.query(User).filter_by(email=transaction.recipient).first()
+    account = user.account
+    currencies = account.crypto_currencies
+    filtered = filter(lambda a: a.name == crypto_currency, currencies)
+    currencies = list(filtered)
+
+    if currencies == []:
+        currency = CryptoCurrency(crypto_currency_amount=amount, crypto_currency_name=crypto_currency, account_id=account.id)
+        local_session.add(currency)
+        local_session.commit()
+    else:
+        currency = next(
+            filter(lambda a: a.name == crypto_currency, currencies), None)
+        currency.amount = currency.amount + amount
+
+        if currency.amount < 0:
+            return {"Insufficient funds"}
+        local_session.commit
+
+        transaction.state = StateEnum.PROCESSED.value
+        local_session.commit()
+        q.put("processed")
+
+
+def announce(q1, q2):
+    q1.get()
+    q2.put("processed")
+
+
+@app.route("/transactionState", methods=["PATCH"])
+def transaction_state():
+    trans_id = request.json["id"]
+    state = request.json["state"]
+    user_id = session.get("user_id")
+    transaction = Transaction.query.get(trans_id)
+    crypto_account = User.query.filter_by(email=transaction.sender).first().crypto_account
+    q1 = Queue()
+    q2 = Queue()
+
+    if StateEnum[state].value == "PROCESSING":
+        transaction.state = StateEnum.PROCESSING.value
+        db.session.commit()
+        cryptoCurrencyUpdate(transaction.cryptocurrency, transaction.amount, crypto_account)
+        _thread.start_new_thread(announce, (q1, q2))
+        process = Process(target=mining,
+                          args=(user_id, trans_id, transaction.cryptocurrency,
+                                transaction.amount, q1))
+        process.start()
+        q2.get()
+    else:
+        transaction.state = Transaction.REJECTED.value
+        db.session.commit()
+
+    return Response(status=200)
+
+
+@app.route("/startTransaction", methods=["POST"])
+def start_transaction():
+    recipient_email = request.json["recipient"]
+    amount = int(request.json["transferAmount"])
+    currency = request.json["currencyTransfer"]
+    user_exists = User.query.filter_by(email=recipient_email).first()
+    if user_exists is None:
+        return {"error": "There is no user with chosen email"}
+    else:
+        id = session.get("user_id")
+        user = User.query.get(id)
+        currencies = user.account.crypto_currencies
+        balances = filter(lambda  a: a.name == currency and a.amount, currencies)
+        balances = list(balances)
+        if balances == []:
+            return {"error": "Not enough funds"}
+        sha3 = _sha3.sha3_256()
+        new_string = "" + user.email + recipient_email + \
+            str(amount) + str(random.Random().randint(0, 1000))
+        sha3.update(new_string.encode())
+        transaction = Transaction(
+            hashID = sha3.hexdigest(),
+            id=user.id,
+            sender=user.email,
+            recipient=recipient_email,
+            amount=amount,
+            crypto_currency=currency,
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        return Response(status=200)
+
+
+@app.route("/allTransactions")
+def all_transactions():
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+    transactions = Transaction.query.all()
+    filtered = filter(
+        lambda a: (a.sender == user.email or a.recipient == user.email), transactions
+    )
+    transactions = list(filtered)
+    return jsonify(transactions)
+
+
+@app.route('/register', methods=["POST"])
 def register():
     firstName = request.json["firstName"]
     lastName = request.json["lastName"]
@@ -248,20 +371,21 @@ def login():
         return jsonify({"error": "Unauthorized"})
 
     if not bcrypt.check_password_hash(user.password, password):
-        return  jsonify({"error":"Unauthorized"})
+        return jsonify({"error": "Unauthorized"})
     session["user_id"] = user.id
 
-    #dodata linija za verifikaciju koji oni moraju hendlovati na frontendu, stranica za unos kreditne kartice
+    # dodata linija za verifikaciju koji oni moraju hendlovati na frontendu, stranica za unos kreditne kartice
     if user.verified == False:
         return jsonify({"error": "Not Verified"})
 
     return Response(status=200)
 
+
 @app.route("/logout", methods=["POST"])
 def logout():
-
     session.pop("user_id", None)
-    return  Response(status=200)
+    return Response(status=200)
+
 
 @app.route("/changeUserData", methods=["PUT"])
 def change_user_data():
@@ -282,15 +406,17 @@ def change_user_data():
     user.password = bcrypt.generate_password_hash(user.password)
 
     if email_exists > 1:
-        return jsonify({"error":"Email already in use"}), 409
+        return jsonify({"error": "Email already in use"}), 409
 
     db.session.commit()
     return Response(status=200)
+
 
 @app.route("/check_session_working")
 def check_session_working():
     user_id = session.get("user_id")
     return jsonify({"user_id": user_id})
+
 
 # 4. Pregled stanja
 @app.route("/status_account_check")
@@ -299,6 +425,7 @@ def status_account_check():
     user = User.query.get(user_id)
     crypto_acc = user.account
     return jsonify({"amount": crypto_acc.amount})
+
 
 if __name__ == '__main__':
     app.run()
