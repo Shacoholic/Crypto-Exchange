@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7638a37b-c311-41b2-b593-37033269d07c" name="Changes" comment="">
+<<<<<<< Updated upstream
       <change afterPath="$PROJECT_DIR$/models/StateEnum.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/transaction.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +72,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671611329836</updated>
+<<<<<<< Updated upstream
+=======
+      <workItem from="1674254976426" duration="1609000" />
+      <workItem from="1674256660625" duration="1435000" />
+      <workItem from="1674258168960" duration="1072000" />
+      <workItem from="1674289972588" duration="258000" />
+      <workItem from="1674337683264" duration="2450000" />
+      <workItem from="1674375806102" duration="21836000" />
+      <workItem from="1674468679134" duration="2259000" />
+      <workItem from="1674473267015" duration="787000" />
+      <workItem from="1674474078182" duration="3015000" />
+      <workItem from="1674491410458" duration="4390000" />
+      <workItem from="1674496186661" duration="6750000" />
+      <workItem from="1674555261708" duration="11905000" />
+      <workItem from="1674587117528" duration="37256000" />
+      <workItem from="1674746082036" duration="18771000" />
+      <workItem from="1674811105511" duration="9371000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
