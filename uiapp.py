@@ -19,6 +19,10 @@ def registerLink():
 def verify():
     return render_template('Verify.html')
 
+@uiapp.route('/transactions', methods=['GET'])
+def transactions():
+    return render_template('Transactions.html')
+
 @uiapp.route('/home', methods=['GET', 'POST'])
 def home():
     return render_template('Home.html')

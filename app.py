@@ -9,6 +9,7 @@ from configuration import db, bcrypt, ApplicationConfig
 from models import StateEnum
 from models.models import User, Account, Transaction, CryptoCurrency, CreditCard
 from flask_session import Session
+from datetime import datetime
 import _sha3
 from urllib.parse import urlencode
 import glob
@@ -174,22 +175,23 @@ def verification():
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
-    if (
-            user.verified == False and number == 4242424242424242 and first_name == user.first_name and expiration_date == "02/23" and security_code == 123):
+    date = datetime.strptime(expiration_date, '%Y-%m-%d')
+
+    if (user.verified == False and first_name == user.first_name):
         money_amount = random.randint(1000, 3000)
         money_amount -= 1
         credit_card = CreditCard(credit_card_holder_name=user.first_name,
-                                 money_amount=money_amount,
-                                 user=user)
+                                 credit_card_number=number,
+                                 expiration_date=expiration_date,
+                                 cvv=security_code,
+                                 money_amount=money_amount)
         user.verified = True
         db.session.add(credit_card)
         db.session.commit()
         create_crypto_account(user)
 
-        return redirect('http://127.0.0.1:5002/', code=307)
-    else:
-        return "already verified", 200
 
+    return redirect('http://127.0.0.1:5002/home', code=307)
 
 # posle ovoga moze da uplatni sredstva na online racun - posebna stranica i metoda
 def create_crypto_account(user):
@@ -304,7 +306,7 @@ def start_transaction():
             str(amount) + str(random.Random().randint(0, 1000))
         sha3.update(new_string.encode())
         transaction = Transaction(
-            hashID = sha3.hexdigest(),
+            hashID=sha3.hexdigest(),
             id=user.id,
             sender=user.email,
             recipient=recipient_email,
@@ -360,7 +362,7 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    return redirect('http://127.0.0.1:5002/verify', code=307)
+    return redirect('http://127.0.0.1:5002/', code=307)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -375,12 +377,9 @@ def login():
         return jsonify({"error": "Unauthorized"})
     session["user_id"] = user.id
 
-    # dodata linija za verifikaciju koji oni moraju hendlovati na frontendu, stranica za unos kreditne kartice
-    if user.verified == False:
-        return jsonify({"error": "Not Verified"})
     #dodata linija za verifikaciju koji oni moraju hendlovati na frontendu, stranica za unos kreditne kartice
-   # if user.verified == False:
-     #   return redirect('http://127.0.0.1:5002/verify', code=307)
+    if user.verified == False:
+      return redirect('http://127.0.0.1:5002/verify', code=307)
 
     return redirect('http://127.0.0.1:5002/home', code=307)
 
@@ -429,20 +428,11 @@ def change_user_data():
 
     user = User.query.get(id)
 
-    user.first_name = request.json["firstName"]
-    user.last_name = request.json["lastName"]
-    user.address = request.json["address"]
-    user.city = request.json["city"]
-    user.country = request.json["country"]
-    user.phone = request.json["phone"]
-    user.email = request.json["email"]
-    user.password = request.json["password"]
+   # email_exists = User.query.filter_by(email=user.email).count()
+    #user.password = bcrypt.generate_password_hash(user.password)
 
-    email_exists = User.query.filter_by(email=user.email).count()
-    user.password = bcrypt.generate_password_hash(user.password)
-
-    if email_exists > 1:
-        return jsonify({"error": "Email already in use"}), 409
+    #if email_exists > 1:
+     #   return jsonify({"error": "Email already in use"}), 409
     user.first_name = request.form["Name"]
     user.last_name = request.form["Surname"]
     user.address = request.form["Adress"]
@@ -452,17 +442,17 @@ def change_user_data():
 
     db.session.commit()
 
-    image = request.files['image']
-    newpath = r'C:\Users\Nebojsa\Documents\GitHub\Crypto-Exchange\\templates\Files' + '\\' + user.email
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
+   # image = request.files['image']
+   # newpath = r'C:\Users\Nebojsa\Documents\GitHub\Crypto-Exchange\\templates\Files' + '\\' + user.email
+   # if not os.path.exists(newpath):
+    #    os.makedirs(newpath)
 
-    path = newpath + '\\*'
-    files = glob.glob(path)
-    for f in files:
-        os.remove(f)
+    #path = newpath + '\\*'
+    #files = glob.glob(path)
+    #for f in files:
+     #   os.remove(f)
 
-    image.save(os.path.join(newpath + '\\' + image.filename))
+   # image.save(os.path.join(newpath + '\\' + image.filename))
 
     return redirect('http://127.0.0.1:5002/home', code=307)
 

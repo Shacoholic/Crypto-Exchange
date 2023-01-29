@@ -1,4 +1,6 @@
 from configuration import db
+from datetime import datetime
+
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,17 +8,23 @@ class Account(db.Model):
     crypto_currencies = db.relationship("CryptoCurrency", backref="account")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
+
 class CreditCard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     credit_card_holder_name = db.Column(db.String(200))
+    credit_card_number = db.Column(db.String(200))
+    expiration_date = db.Column(db.String(200))
+    cvv = db.Column(db.String(200))
     money_amount = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
 
 class CryptoCurrency(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     crypto_currency_amount = db.Column(db.Float)
     crypto_currency_name = db.Column(db.String(200))
     account_id = db.Column(db.Integer, db.ForeignKey("account.id"))
+
 
 class Transaction(db.Model):
     hashID = db.Column(db.String(256), primary_key=True)

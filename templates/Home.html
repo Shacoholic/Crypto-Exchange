@@ -229,7 +229,7 @@
 <body>
 
 <div class="meni">
-    <form action="/logout" method="post">
+    <form action="http://127.0.0.1:5000/logout" method="post">
         <button class="meni" type="submit" name="logout" value="Log">LogOut</button>
     </form>
 </div>
@@ -313,8 +313,9 @@
         <div class="buttons">
             <button class="meni">All curency</button>
             <br>
-            <br>
+            <form action="http://127.0.0.1:5002/transactions">
             <button class="meni">My transactions</button>
+                </form>
             <br>
             <br>
             <form action="http://127.0.0.1:5000/getCurrentUser" method="post">
