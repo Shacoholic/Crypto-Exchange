@@ -246,7 +246,7 @@
                         <select name="currencyTransfer">
                                 <option>USA</option>
                             {% for crypto in crypto_currencies %}
-                                <option>{{crypto.crypto_currency_name}}</option>
+                                <option value="{{crypto.crypto_currency_name}}"></option>
                             {% endfor %}
                         </select>
                         <input type="submit" value="transfer">
@@ -257,7 +257,7 @@
             </div>
             <br>
             <div class="import">
-                <form action="http://127.0.0.1:5000/transfer_money_to_account" method="post">
+                <form action="http://127.0.0.1:5000/transfer_money_to_account" method="post" >
                     <h4>Import money from credit card</h4>
                     <input type="number" name="amount" id="import">
                     <input type="submit" value="import" id="import">
@@ -272,13 +272,13 @@
                     <select name="selling">
                             <option>USA</option>
                         {% for crypto in crypto_currencies %}
-                            <option>{{crypto.crypto_currency_name}}</option>
+                            <option value="{{crypto.crypto_currency_name}}"></option>
                         {% endfor %}
                     </select>
                     <select name="buying">
                             <option>USA</option>
                         {% for crypto in crypto_currencies %}
-                            <option>{{crypto.crypto_currency_name}}</option>
+                            <option value="{{crypto.crypto_currency_name}}"></option>
                         {% endfor %}
                     </select>
                     <input type="submit" value="exchange">
@@ -295,7 +295,7 @@
 
         <div class="table">
             <form action="http://127.0.0.1:5000/showCryptoCurrencies">
-                <button type="submit" style="margin-left: 20px">REFRESH TABLE</button>
+                <button type="submit" style="margin-left: 5px">REFRESH TABLE</button>
                 <div class="values">
                     <table>
                         <th>Sign</th>
@@ -303,9 +303,9 @@
                         <th>Value</th>
                         {% for crypto in cryptolist %}
                             <tr>
-                                <td>{{crypto.symbol}}</td>
-                                <td>{{crypto.name}}</td>
-                                <td>${{crypto.price}}</td>
+                                <td>{{crypto[0]}}</td>
+                                <td>{{crypto[1]}}</td>
+                                <td>${{crypto[2]}}</td>
                             </tr>
                         {% endfor %}
                     </table>
