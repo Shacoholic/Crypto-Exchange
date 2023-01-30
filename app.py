@@ -468,7 +468,7 @@ def check_session_working():
 def status_account_check():
     user_id = session.get("user_id")
     user = User.query.get(user_id)
-    crypto_acc = user.account
+    assert = user.account
     return redirect("")
 
 

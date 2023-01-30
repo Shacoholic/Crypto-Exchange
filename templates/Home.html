@@ -238,7 +238,7 @@
     <div class="container">
         <div class="functions">
             <div class="send">
-                <form action="http://127.0.0.1:5002/startTransaction" method="post" >
+                <form action="http://127.0.0.1:5000/startTransaction" method="post" >
                     <h4>Transfer</h4>
                         <input type="text" name="recipient">
                         <input type="number" name="transferAmount">
@@ -256,7 +256,7 @@
             </div>
             <br>
             <div class="import">
-                <form action="http://127.0.0.1:5002/transfer_money_to_account" method="post" enctype="multipart/form-data">
+                <form action="http://127.0.0.1:5000/transfer_money_to_account" method="post" enctype="multipart/form-data">
                     <h4>Import money from credit card</h4>
                     <input type="number" name="amount" id="import">
                     <input type="submit" value="import" id="import">
@@ -266,7 +266,7 @@
             <br>
             <div class="exchange">
                 <h4>Currency exchange</h4>
-                <form action="http://127.0.0.1:5002/exchange" method="PATCH">
+                <form action="http://127.0.0.1:5000/exchange" method="PATCH">
                     <input type="number" name="amount">
                     <select name="selling">
                             <option>USA</option>
@@ -291,7 +291,7 @@
         </div>
 
         <div class="table">
-            <form>
+            <form action="http://127.0.0.1:5000/showCryptoCurrencies">
                 <h2>Account ballance:</h2>
                 &nbsp;&nbsp;&nbsp;<p style="font-size: 20px;">${{amount}}</p>
                 <div class="values">

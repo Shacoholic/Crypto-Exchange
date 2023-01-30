@@ -13,7 +13,7 @@ def main():
 
 @uiapp.route('/registerLink', methods=['GET'])
 def registerLink():
-    return render_template('Register.html')
+    return render_template('Register.html')   
 
 @uiapp.route('/verify', methods=['GET', 'POST'])
 def verify():
