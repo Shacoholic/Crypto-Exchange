@@ -28,6 +28,7 @@
     }
 
     h2 {
+        margin-top: 40px;
         margin-left: 10px;
         color: rgb(100, 0, 0);
         display: inline-block;
@@ -51,7 +52,7 @@
     div.functions {
         background-color: rgba(98, 98, 98, 0.5);
         width: 30%;
-        height: 486px;
+        height: 520px;
         display: inline-block;
         margin-left: 12%;
         color: rgb(100, 0, 0);
@@ -245,7 +246,7 @@
                         <select name="currencyTransfer">
                                 <option>USA</option>
                             {% for crypto in crypto_currencies %}
-                                <option>{{crypto.crypto_currency_name}}</option>
+                                <option value="{{crypto.crypto_currency_name}}"></option>
                             {% endfor %}
                         </select>
                         <input type="submit" value="transfer">
@@ -256,7 +257,7 @@
             </div>
             <br>
             <div class="import">
-                <form action="http://127.0.0.1:5000/transfer_money_to_account" method="post">
+                <form action="http://127.0.0.1:5000/transfer_money_to_account" method="post" >
                     <h4>Import money from credit card</h4>
                     <input type="number" name="amount" id="import">
                     <input type="submit" value="import" id="import">
@@ -271,13 +272,13 @@
                     <select name="selling">
                             <option>USA</option>
                         {% for crypto in crypto_currencies %}
-                            <option>{{crypto.crypto_currency_name}}</option>
+                            <option value="{{crypto.crypto_currency_name}}"></option>
                         {% endfor %}
                     </select>
                     <select name="buying">
                             <option>USA</option>
                         {% for crypto in crypto_currencies %}
-                            <option>{{crypto.crypto_currency_name}}</option>
+                            <option value="{{crypto.crypto_currency_name}}"></option>
                         {% endfor %}
                     </select>
                     <input type="submit" value="exchange">
@@ -285,6 +286,8 @@
                     <label id="to2">Amount</label>
                     <label id="amount3">Selling</label>
                     <label id="curr2">Buying</label>
+                    <h2>Account ballance:</h2>
+                &nbsp;&nbsp;&nbsp; ${{user}}
                 </form>    
             </div>
         
@@ -292,9 +295,7 @@
 
         <div class="table">
             <form action="http://127.0.0.1:5000/showCryptoCurrencies">
-                <h2>Account ballance:</h2>
-                &nbsp;&nbsp;&nbsp;<p style="font-size: 20px;">${{amount}}</p>
-                <button type="submit" style="margin-left: 20px">REFRESH TABLE</button>
+                <button type="submit" style="margin-left: 5px">REFRESH TABLE</button>
                 <div class="values">
                     <table>
                         <th>Sign</th>
@@ -302,9 +303,9 @@
                         <th>Value</th>
                         {% for crypto in cryptolist %}
                             <tr>
-                                <td>{{crypto.symbol}}</td>
-                                <td>{{crypto.name}}</td>
-                                <td>${{crypto.price}}</td>
+                                <td>{{crypto[0]}}</td>
+                                <td>{{crypto[1]}}</td>
+                                <td>${{crypto[2]}}</td>
                             </tr>
                         {% endfor %}
                     </table>

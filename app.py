@@ -51,7 +51,7 @@ def showCryptoCurrencies():
          "code":201,
          "list":cryptolist
     }
-    redirect_BaseUrl = "http://127.0.0.1:5002/home"
+    redirect_BaseUrl = "http://127.0.0.1:5002/homeCrypto"
     redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
     return redirect(redirect_url)
 
@@ -117,7 +117,7 @@ def exchange():
             "code":302,
             "amount":amount
         }
-        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
         redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
         return redirect(redirect_url)
 
@@ -203,7 +203,7 @@ def verification():
         create_crypto_account(user)
 
 
-    return redirect('http://127.0.0.1:5002/home', code=307)
+    return redirect('http://127.0.0.1:5002/homeLogin', code=307)
 
 # posle ovoga moze da uplatni sredstva na online racun - posebna stranica i metoda
 def create_crypto_account(user):
@@ -232,7 +232,7 @@ def transfer_money_to_account():
             "amount":user.account.amount
         }
         db.session.commit()
-        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
         redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
         return redirect(redirect_url)
     else:
@@ -337,7 +337,7 @@ def start_transaction():
             "code":302,
             "amount":user.account.amount
         }
-        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
         redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
         return redirect(redirect_url)
 
@@ -405,7 +405,13 @@ def login():
     if user.verified == False:
       return redirect('http://127.0.0.1:5002/verify', code=307)
 
-    return redirect('http://127.0.0.1:5002/home', code=307)
+    dicti = {
+            "code":302,
+            "amount":0
+        }
+    redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
+    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+    return redirect(redirect_url)
 
 
 @app.route("/logout", methods=["POST"])
@@ -478,7 +484,12 @@ def change_user_data():
 
    # image.save(os.path.join(newpath + '\\' + image.filename))
 
-    return redirect('http://127.0.0.1:5002/home', code=307)
+    dicti = {
+            "code":402,
+        }
+    redirect_BaseUrl = "http://127.0.0.1:5002/homeLogin"
+    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+    return redirect(redirect_url)
 
 
 @app.route("/check_session_working")

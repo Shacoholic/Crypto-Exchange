@@ -6,6 +6,7 @@ uiapp = Flask(__name__)
 
 file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
+global amount
 
 @uiapp.route('/', methods=['GET', 'POST'])
 def main():
@@ -23,15 +24,20 @@ def verify():
 def transactions():
     return render_template('Transactions.html')
 
-@uiapp.route('/home', methods=['GET', 'POST'])
-def home():
-    if(request.args.get("code")!=201):
-        amount = request.args.get("amount")
-        return render_template('Home.html', amount= amount)
-    else:
-       return render_template('Home.html', cryptolist = request.args)
-
-
+@uiapp.route('/homeCrypto')
+def homeCrypto():
+    cryptolist=request.args.get("list")
+    crypto = cryptolist.split(',')
+    crypto = crypto.split(':')
+    return render_template('Home.html', cryptolist = crypto)
+@uiapp.route('/homeLogin')
+def homeLogin():    
+    return render_template('Home.html')
+@uiapp.route('/homeAmount', methods=['GET', 'POST'])
+def homeAmount():
+    amount = request.args.get("amount")
+    return render_template('Home.html', user= amount)
+    
 @uiapp.route('/profile', methods=['GET', 'POST'])
 def profile():
 
