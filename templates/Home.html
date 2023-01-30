@@ -36,7 +36,7 @@
     div.table {
         vertical-align: top;
         background-color: rgba(98, 98, 98, 0.50);
-        width: 45%;
+        width: 50%;
         height: 40%;
         padding: 5px;
         display: inline-block;
@@ -51,7 +51,7 @@
     div.functions {
         background-color: rgba(98, 98, 98, 0.5);
         width: 30%;
-        height: 483px;
+        height: 486px;
         display: inline-block;
         margin-left: 12%;
         color: rgb(100, 0, 0);
@@ -294,15 +294,17 @@
             <form action="http://127.0.0.1:5000/showCryptoCurrencies">
                 <h2>Account ballance:</h2>
                 &nbsp;&nbsp;&nbsp;<p style="font-size: 20px;">${{amount}}</p>
+                <button type="submit" style="margin-left: 20px">REFRESH TABLE</button>
                 <div class="values">
                     <table>
+                        <th>Sign</th>
                         <th>Name</th>
                         <th>Value</th>
-                        <th>Circluation amount</th>
                         {% for crypto in cryptolist %}
                             <tr>
-                                <td>{{crypto.crypto_currency_name}}</td>
-                                <td>${{crypto.crypto_currency_amount}}</td>
+                                <td>{{crypto.symbol}}</td>
+                                <td>{{crypto.name}}</td>
+                                <td>${{crypto.price}}</td>
                             </tr>
                         {% endfor %}
                     </table>

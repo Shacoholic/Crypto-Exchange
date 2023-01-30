@@ -47,14 +47,14 @@ def showCryptoCurrencies():
     response = s.get(url)
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
-    return cryptolist, 200
+    return redirect('http://127.0.0.1:5002/home', list=cryptolist,code=201)
 
 
 @app.route("/exchange", methods=["PATCH"])
 def exchange():
-    selling = request.json["selling"]
-    buying = request.json["buying"]
-    amount = request.json["amount"]
+    selling = request.form["selling"]
+    buying = request.form["buying"]
+    amount = request.form["amount"]
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     account = user.account
@@ -107,7 +107,7 @@ def exchange():
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
 
-    return Response(status=200)
+    return redirect('http://127.0.0.1:5002/home', amount=amount)
 
 
 def gettingPrice(selling, buying):
@@ -208,7 +208,7 @@ def create_crypto_account(user):
 # prebacivanje novca na crypto racun
 @app.route('/transfer_money_to_account', methods=["POST"])
 def transfer_money_to_account():
-    amount = request.json["amount"]
+    amount = request.form["amount"]
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
@@ -216,7 +216,7 @@ def transfer_money_to_account():
         user.credit_card.money_amount -= amount
         user.account.amount += amount
         db.session.commit()
-        return "money successfully transferred", 200
+        return redirect('http://127.0.0.1:5002/home', amount=user.account.amount)
     else:
         return jsonify({"error": "Not enough money on a card"})
 
@@ -287,9 +287,9 @@ def transaction_state():
 
 @app.route("/startTransaction", methods=["POST"])
 def start_transaction():
-    recipient_email = request.json["recipient"]
-    amount = int(request.json["transferAmount"])
-    currency = request.json["currencyTransfer"]
+    recipient_email = request.form["recipient"]
+    amount = int(request.form["transferAmount"])
+    currency = request.form["currencyTransfer"]
     user_exists = User.query.filter_by(email=recipient_email).first()
     if user_exists is None:
         return {"error": "There is no user with chosen email"}
@@ -315,7 +315,7 @@ def start_transaction():
         )
         db.session.add(transaction)
         db.session.commit()
-        return Response(status=200)
+        return redirect('http://127.0.0.1:5002/home', amount=user.account.amount)
 
 
 @app.route("/allTransactions")

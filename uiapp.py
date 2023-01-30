@@ -25,7 +25,11 @@ def transactions():
 
 @uiapp.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template('Home.html')
+    if(request.code!=201):
+        return render_template('Home.html', amount=request.amount)
+    else:
+       return render_template('Home.html',cryptolist = request.list)
+
 
 @uiapp.route('/profile', methods=['GET', 'POST'])
 def profile():
