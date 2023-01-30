@@ -24,17 +24,8 @@ def verify():
 def transactions():
     return render_template('Transactions.html')
 
-@uiapp.route('/homeCrypto')
-def homeCrypto():
-    cryptolist=request.args.get("list")
-    crypto = cryptolist.split(',')
-    crypto = crypto.split(':')
-    return render_template('Home.html', cryptolist = crypto)
-@uiapp.route('/homeLogin')
-def homeLogin():    
-    return render_template('Home.html')
-@uiapp.route('/homeAmount', methods=['GET', 'POST'])
-def homeAmount():
+@uiapp.route('/home', methods=['GET', 'POST'])
+def home():
     amount = request.args.get("amount")
     return render_template('Home.html', user= amount)
     

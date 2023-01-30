@@ -47,13 +47,8 @@ def showCryptoCurrencies():
     response = s.get(url)
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
-    dicti = {
-         "code":201,
-         "list":cryptolist
-    }
-    redirect_BaseUrl = "http://127.0.0.1:5002/homeCrypto"
-    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
-    return redirect(redirect_url)
+    cryptolist = cryptolist.split(',')
+    return Response(cryptolist)
 
 
 @app.route("/exchange", methods=["PATCH"])
@@ -113,13 +108,7 @@ def exchange():
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
 
-        dicti = {
-            "code":302,
-            "amount":amount
-        }
-        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
-        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
-        return redirect(redirect_url)
+        return Response(user.account.amount)
 
 
 def gettingPrice(selling, buying):
@@ -203,8 +192,12 @@ def verification():
         db.session.commit()
         create_crypto_account(user)
 
-
-    return redirect('http://127.0.0.1:5002/homeLogin', code=307)
+    dicti = {
+            "amount":user.account.amount
+        }
+    redirect_BaseUrl = "http://127.0.0.1:5002/home"
+    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+    return redirect(redirect_url)
 
 # posle ovoga moze da uplatni sredstva na online racun - posebna stranica i metoda
 def create_crypto_account(user):
@@ -229,11 +222,10 @@ def transfer_money_to_account():
         user.credit_card.money_amount -= amount
         user.account.amount += amount
         dicti = {
-            "code":302,
             "amount":user.account.amount
         }
         db.session.commit()
-        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
         redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
         return redirect(redirect_url)
     else:
@@ -335,10 +327,9 @@ def start_transaction():
         db.session.add(transaction)
         db.session.commit()
         dicti = {
-            "code":302,
             "amount":user.account.amount
         }
-        redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
         redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
         return redirect(redirect_url)
 
@@ -406,11 +397,14 @@ def login():
     if user.verified == False:
       return redirect('http://127.0.0.1:5002/verify', code=307)
 
+    id = session.get("user_id")
+
+    user = User.query.get(id)
+
     dicti = {
-            "code":302,
-            "amount":0
+            "amount": user.account.amount
         }
-    redirect_BaseUrl = "http://127.0.0.1:5002/homeAmount"
+    redirect_BaseUrl = "http://127.0.0.1:5002/home"
     redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
     return redirect(redirect_url)
 
@@ -486,9 +480,9 @@ def change_user_data():
    # image.save(os.path.join(newpath + '\\' + image.filename))
 
     dicti = {
-            "code":402,
-        }
-    redirect_BaseUrl = "http://127.0.0.1:5002/homeLogin"
+         "amount":user.account.amount
+    }
+    redirect_BaseUrl = "http://127.0.0.1:5002/home"
     redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
     return redirect(redirect_url)
 
