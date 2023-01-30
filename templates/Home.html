@@ -84,7 +84,7 @@
 
     table
     {
-        width: 100%;
+        width: 80%;
         height: 100%;
         border-collapse: collapse;
     }
@@ -125,13 +125,13 @@
 
     label#to2
     {
-        margin-left: 4%;
+        margin-left: 6%;
         font-size: 12.5px;
     }
 
     label#amount
     {
-        margin-left: 11%;
+        margin-left: 15%;
         font-size: 12.5px;
     }
 
@@ -143,7 +143,7 @@
 
     label#amount3
     {
-        margin-left: 9%;
+        margin-left: 15%;
         font-size: 12.5px;
     }
 
@@ -156,13 +156,13 @@
 
     label#curr
     {
-        margin-left: 12%;
+        margin-left: 16%;
         font-size: 12.5px;
     }
 
     label#curr2
     {
-        margin-left: 14%;
+        margin-left: 20%;
         font-size: 12.5px;
     }
 
@@ -235,98 +235,92 @@
 </div>
 <h1>YOUR CRYPTO</h1>
 <hr>
-<div class="container">
-    <div class="functions">
-        <div class="send">
-            <h4>Transfer</h4>
-            <form method="post">
-                <input type="text">
-                <input type="number">
-                <select name="valutes">
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    <option>Option 3</option>
-                </select>
-                <input type="submit" value="transfer">
-            </form>
-            <label id="to">Transfer to</label>
-            <label id="amount">Amount</label>
-            <label id="curr">Currency</label>
-        </div>
-        <br>
-        <div class="import">
-            <h4>Import money from credit card</h4>
-            <form method="post">
-                <input type="number" id="import">
-                <input type="submit" value="import" id="import">
-            </form>
-            <label id="amount2">Amount</label>
-        </div>
-        <br>
-        <div class="exchange">
-            <h4>Currency exchange</h4>
-            <form method="post">
-                <input type="number">
-                <select name="valutesb">
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    <option>Option 3</option>
-                </select>
-                <select name="valutess">
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    <option>Option 3</option>
-                </select>
-                <input type="submit" value="exchange">
-            </form>
-            <label id="to2">Transfer to</label>
-            <label id="amount3">Amount</label>
-            <label id="curr2">Currency</label>
-        </div>
-      
-    </div>
-
-    <div class="table">
-        <h2>Much money:</h2>
-        &nbsp;&nbsp;&nbsp;<p>ukupan broj novca</p>
-        <div class="valutes">
-            <table>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-
-                </tr>
-               
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-
-                </tr>
-
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-
-                </tr>
-            </table>
-        </div>
-        <div class="buttons">
-            <button class="meni">All curency</button>
-            <br>
-            <form action="http://127.0.0.1:5002/transactions">
-            <button class="meni">My transactions</button>
+    <div class="container">
+        <div class="functions">
+            <div class="send">
+                <form action="http://127.0.0.1:5002/startTransaction" method="post">
+                    <h4>Transfer</h4>
+                        <input type="text" name="recipient">
+                        <input type="number" name="transferAmount">
+                        <select name="currencyTransfer">
+                                <option>USA</option>
+                            {% for crypto in account.crypto_currencies %}
+                                <option>{{crypto.crypto_currency_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="transfer">
+                    <label id="to">Transfer to</label>
+                    <label id="amount">Amount</label>
+                    <label id="curr">Currency</label>
                 </form>
+            </div>
             <br>
-            <br>
-            <form action="http://127.0.0.1:5000/getCurrentUser" method="post">
-            <button type="submit" class="meni">My profile</button>
+            <div class="import">
+                <form action="http://127.0.0.1:5002/transfer_money_to_account" method="post" enctype="multipart/form-data">
+                    <h4>Import money from credit card</h4>
+                    <input type="number" name="amount" id="import">
+                    <input type="submit" value="import" id="import">
                 </form>
+                <label id="amount2"> Amount </label>
+            </div>
             <br>
-            <button class="meni">My crypto</button>
+            <div class="exchange">
+                <h4>Currency exchange</h4>
+                <form action="http://127.0.0.1:5002/exchange" method="PATCH">
+                    <input type="number" name="amount">
+                    <select name="selling">
+                            <option>USA</option>
+                        {% for crypto in account.crypto_currencies %}
+                            <option>{{crypto.crypto_currency_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="buying">
+                            <option>USA</option>
+                        {% for crypto in account.crypto_currencies %}
+                            <option>{{crypto.crypto_currency_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="exchange">
+                
+                    <label id="to2">Amount</label>
+                    <label id="amount3">Selling</label>
+                    <label id="curr2">Buying</label>
+                </form>    
+            </div>
+        
+        </div>
+
+        <div class="table">
+            <form>
+                <h2>Account ballance:</h2>
+                &nbsp;&nbsp;&nbsp;<p style="font-size: 20px;">${{user.account.amount}}</p>
+                <div class="values">
+                    <table>
+                        {% for crypto in cryptolist %}
+                            <tr>
+                                <td>{{crypto.crypto_currency_name}}</td>
+                                <td>${{crypto.crypto_currency_amount}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </form>
+            <div class="buttons">
+                <button class="meni">All curency</button>
+                <br>
+                <form action="http://127.0.0.1:5002/transactions">
+                <button class="meni">My transactions</button>
+                    </form>
+                <br>
+                <br>
+                <form action="http://127.0.0.1:5000/getCurrentUser" method="post">
+                <button type="submit" class="meni">My profile</button>
+                    </form>
+                <br>
+                <button class="meni">My crypto</button>
+            </div>
         </div>
     </div>
-    </div>
-
-    </body>
+</body>
 
 </html>
