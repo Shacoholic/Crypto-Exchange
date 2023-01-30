@@ -196,7 +196,8 @@ def verification():
                                  credit_card_number=number,
                                  expiration_date=expiration_date,
                                  cvv=security_code,
-                                 money_amount=money_amount)
+                                 money_amount=money_amount,
+                                 user_id=user.id)
         user.verified = True
         db.session.add(credit_card)
         db.session.commit()
@@ -220,7 +221,7 @@ def create_crypto_account(user):
 # prebacivanje novca na crypto racun
 @app.route('/transfer_money_to_account', methods=["POST"])
 def transfer_money_to_account():
-    amount = request.form["amount"]
+    amount = float(request.form["amount"])
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 

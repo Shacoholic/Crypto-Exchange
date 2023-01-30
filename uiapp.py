@@ -27,9 +27,9 @@ def transactions():
 def home():
     if(request.args.get("code")!=201):
         amount = request.args.get("amount")
-        return render_template('Home.html', amount= amount)
+        return render_template('Home.html', user=amount)
     else:
-       return render_template('Home.html', cryptolist = request.args)
+        return render_template('Home.html', cryptolist=request.args.get("list"))
 
 
 @uiapp.route('/profile', methods=['GET', 'POST'])
