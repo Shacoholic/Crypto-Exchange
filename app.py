@@ -47,7 +47,13 @@ def showCryptoCurrencies():
     response = s.get(url)
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
-    return redirect('http://127.0.0.1:5002/home', list=cryptolist,code=201)
+    dicti = {
+         "code":201,
+         "list":cryptolist
+    }
+    redirect_BaseUrl = "http://127.0.0.1:5002/home"
+    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+    return redirect(redirect_url)
 
 
 @app.route("/exchange", methods=["PATCH"])
@@ -107,7 +113,13 @@ def exchange():
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
 
-    return redirect('http://127.0.0.1:5002/home', amount=amount)
+        dicti = {
+            "code":302,
+            "amount":amount
+        }
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
 
 
 def gettingPrice(selling, buying):
@@ -215,8 +227,14 @@ def transfer_money_to_account():
     if (user.credit_card.money_amount >= amount):
         user.credit_card.money_amount -= amount
         user.account.amount += amount
+        dicti = {
+            "code":302,
+            "amount":user.account.amount
+        }
         db.session.commit()
-        return redirect('http://127.0.0.1:5002/home', amount=user.account.amount)
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
     else:
         return jsonify({"error": "Not enough money on a card"})
 
@@ -315,7 +333,13 @@ def start_transaction():
         )
         db.session.add(transaction)
         db.session.commit()
-        return redirect('http://127.0.0.1:5002/home', amount=user.account.amount)
+        dicti = {
+            "code":302,
+            "amount":user.account.amount
+        }
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
 
 
 @app.route("/allTransactions")
