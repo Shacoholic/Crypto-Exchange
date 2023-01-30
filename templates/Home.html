@@ -301,13 +301,11 @@
                         <th>Sign</th>
                         <th>Name</th>
                         <th>Value</th>
-                        {% for crypto in cryptolist %}
                             <tr>
-                                <td>{{crypto.0}}</td>
-                                <td>{{crypto.1}}</td>
-                                <td>${{crypto.2}}</td>
+                                <td>{{cryptolist.0}}</td>
+                                <td>{{cryptolist.1}}</td>
+                                <td>${{cryptolist.2}}</td>
                             </tr>
-                        {% endfor %}
                     </table>
                 </div>
             </form>

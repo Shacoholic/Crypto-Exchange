@@ -48,6 +48,7 @@ def showCryptoCurrencies():
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
     cryptolist = cryptolist.split(',')
+    cryptolist = cryptolist.split(':')
     return Response(cryptolist)
 
 
