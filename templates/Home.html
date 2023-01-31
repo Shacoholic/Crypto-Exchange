@@ -272,14 +272,14 @@
                 <form action="http://127.0.0.1:5000/exchange" method="post">
                     <input type="number" name="amount">
                     <select name="selling">
-                            <option>USA</option>
+                            <option>USD</option>
                             <option>BC</option>
                             <option>ETH</option>
                             <option>USDT</option>
                             <option>USDC</option>
                     </select>
                     <select name="buying">
-                            <option>USA</option>
+                            <option>USD</option>
                             <option>BC</option>
                             <option>ETH</option>
                             <option>USDT</option>
@@ -291,7 +291,7 @@
                     <label id="amount3">Selling</label>
                     <label id="curr2">Buying</label>
                     <h2>Account ballance:</h2>
-                &nbsp;&nbsp;&nbsp; ${{user}}
+                &nbsp;&nbsp;&nbsp; {{ "$%.2f"|format(user|float) }}
                 </form>    
             </div>
         

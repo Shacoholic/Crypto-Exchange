@@ -64,10 +64,11 @@ def showCryptoCurrencies():
 def exchange():
     selling = request.form["selling"]
     buying = request.form["buying"]
-    amount = request.form["amount"]
+    amount = int(request.form["amount"])
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     account = user.account
+    print(selling)
 
     price = gettingPrice(selling, buying)
 
@@ -85,6 +86,13 @@ def exchange():
             newCryptoCurrency(buying, amount, account)
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
+
+        dicti = {
+            "amount": user.account.amount
+        }
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
     elif buying == "USD":
         crypto_currencies = account.crypto_currencies
         crypto_currency = next(
@@ -98,6 +106,13 @@ def exchange():
         crypto_currency.crypto_currency_amount -= paying_sum
         account.amount += amount
         db.session.commit()
+
+        dicti = {
+            "amount": user.account.amount
+        }
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
     else:
         crypto_currencies = account.crypto_currencies
         crypto_currency = next(
@@ -126,39 +141,39 @@ def exchange():
 
 
 def gettingPrice(selling, buying):
-    #url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-    if (buying == "USD"):
-        parameters = {"symbol": selling, "convert": buying}
-    else:
-        parameters = {"symbol": buying, "convert": selling}
+    # url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+    # if (buying == "USD"):
+    # parameters = {"symbol": selling, "convert": buying}
+    # else:
+    #  parameters = {"symbol": buying, "convert": selling}
 
-    #headers = {
+    # headers = {
     #    "Accepts": "application/json",
     #    "X-CMC_PRO_API_KEY": "4ceb685b-2766-45cc-8127-147c64386639"
-    #}
-    #sess = requests.Session()
-    #sess.headers.update(headers)
-    #response = sess.get(url, params=parameters)
+    # }
+    # sess = requests.Session()
+    # sess.headers.update(headers)
+    # response = sess.get(url, params=parameters)
 
     if (buying == "USD"):
-        if(selling=="BC"):
-            price=22.771,15 #response.json()["data"][selling]["quote"][buying]["price"]
-            #price = 1 / price
-        elif(selling=="ETH"):
-            price=1.564,29
-        elif(selling=="USDT"):
-            price=1,00
+        if (selling == "BC"):
+            price = 22.771  # response.json()["data"][selling]["quote"][buying]["price"]
+            # price = 1 / price
+        elif (selling == "ETH"):
+            price = 1.564
+        elif (selling == "USDT"):
+            price = 1
         else:
-            price=0,9999
+            price = 1
     else:
-        if(buying=="BC"):
-            price=1/22.771,15
-        elif(buying=="ETH"):
-            price=1/1.564,29
-        elif(buying=="USDT"):
-            price=1/1
+        if (buying == "BC"):
+            price = 1 / 22.771
+        elif (buying == "ETH"):
+            price = 1 / 1.564
+        elif (buying == "USDT"):
+            price = 1
         else:
-            price=0,9999
+            price = 1
 
     return price
 
@@ -168,6 +183,7 @@ def cryptoCurrencyUpdate(crypto_currency_name, crypto_currency_amount, crypto_cu
                            None)
     crypto_currency.crypto_currency_amount += crypto_currency_amount
     db.session.commit()
+
     return
 
 
@@ -336,7 +352,7 @@ def start_transaction():
         id = session.get("user_id")
         user = User.query.get(id)
         currencies = user.account.crypto_currencies
-        balances = filter(lambda  a: a.name == currency and a.amount, currencies)
+        balances = filter(lambda a: a.name == currency and a.amount, currencies)
         balances = list(balances)
         if balances == []:
             return {"error": "Not enough funds"}
