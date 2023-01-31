@@ -60,7 +60,7 @@ def showCryptoCurrencies():
     return redirect(redirect_url)
 
 
-@app.route("/exchange", methods=["PATCH"])
+@app.route("/exchange", methods=["GET","POST"])
 def exchange():
     selling = request.form["selling"]
     buying = request.form["buying"]
@@ -126,25 +126,39 @@ def exchange():
 
 
 def gettingPrice(selling, buying):
-    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+    #url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
     if (buying == "USD"):
         parameters = {"symbol": selling, "convert": buying}
     else:
         parameters = {"symbol": buying, "convert": selling}
 
-    headers = {
-        "Accepts": "application/json",
-        "X-CMC_PRO_API_KEY": "4ceb685b-2766-45cc-8127-147c64386639"
-    }
-    sess = requests.Session()
-    sess.headers.update(headers)
-    response = sess.get(url, params=parameters)
+    #headers = {
+    #    "Accepts": "application/json",
+    #    "X-CMC_PRO_API_KEY": "4ceb685b-2766-45cc-8127-147c64386639"
+    #}
+    #sess = requests.Session()
+    #sess.headers.update(headers)
+    #response = sess.get(url, params=parameters)
 
     if (buying == "USD"):
-        price = response.json()["data"][selling]["quote"][buying]["price"]
-        price = 1 / price
+        if(selling=="BC"):
+            price=22.771,15 #response.json()["data"][selling]["quote"][buying]["price"]
+            #price = 1 / price
+        elif(selling=="ETH"):
+            price=1.564,29
+        elif(selling=="USDT"):
+            price=1,00
+        else:
+            price=0,9999
     else:
-        price = response.json()["data"][buying]["quote"][selling]["price"]
+        if(buying=="BC"):
+            price=1/22.771,15
+        elif(buying=="ETH"):
+            price=1/1.564,29
+        elif(buying=="USDT"):
+            price=1/1
+        else:
+            price=0,9999
 
     return price
 
