@@ -1,6 +1,7 @@
 import requests
 from flask import Flask, render_template, request
 from logging import FileHandler, WARNING
+import re
 
 uiapp = Flask(__name__)
 
@@ -26,9 +27,16 @@ def transactions():
 
 @uiapp.route('/home', methods=['GET', 'POST'])
 def home():
-    amount = request.args.get("amount")
-    return render_template('Home.html', user= amount)
-    
+        amount = request.args.get("amount")
+
+        if (request.args.get("code") != 302):
+            amount = request.args.get("amount")
+            return render_template('Home.html', user=amount)
+        else:
+            lista = request.args.get("colnames")
+            records = request.args.get("records")
+            return render_template('Home.html', user=amount, colnames=lista, records=records)
+
 @uiapp.route('/profile', methods=['GET', 'POST'])
 def profile():
 

@@ -244,7 +244,6 @@
                         <input type="text" name="recipient">
                         <input type="number" name="transferAmount">
                         <select name="currencyTransfer">
-                                <option>USA</option>
                             {% for crypto in crypto_currencies %}
                                 <option value="{{crypto.crypto_currency_name}}"></option>
                             {% endfor %}
@@ -267,7 +266,7 @@
             <br>
             <div class="exchange">
                 <h4>Currency exchange</h4>
-                <form action="http://127.0.0.1:5000/exchange" method="PATCH">
+                <form action="http://127.0.0.1:5000/exchange" method="post">
                     <input type="number" name="amount">
                     <select name="selling">
                             <option>USA</option>
@@ -298,14 +297,16 @@
                 <button type="submit" style="margin-left: 5px">REFRESH TABLE</button>
                 <div class="values">
                     <table>
-                        <th>Sign</th>
-                        <th>Name</th>
-                        <th>Value</th>
+                        <thead>
                             <tr>
-                                <td>{{cryptolist.0}}</td>
-                                <td>{{cryptolist.1}}</td>
-                                <td>${{cryptolist.2}}</td>
+                               <th>Sign</th>
+                                <th>Name</th>
+                               <th>Value</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
                     </table>
                 </div>
             </form>

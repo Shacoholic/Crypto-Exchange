@@ -9,8 +9,10 @@ from configuration import db, bcrypt, ApplicationConfig
 from models import StateEnum
 from models.models import User, Account, Transaction, CryptoCurrency, CreditCard
 from flask_session import Session
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 import _sha3
+import re
 from urllib.parse import urlencode
 import glob
 import os
@@ -34,7 +36,7 @@ def createDB():
     return 'DB created!'
 
 
-@app.route("/showCryptoCurrencies")
+@app.route("/showCryptoCurrencies", methods=["GET"])
 def showCryptoCurrencies():
     header = {
         "Accepts": "application/json",
@@ -47,12 +49,25 @@ def showCryptoCurrencies():
     response = s.get(url)
     json_response = response.json()
     cryptolist = json.dumps(addingToList(json_response["data"]))
-    cryptolist = cryptolist.split(',')
-    cryptolist = cryptolist.split(':')
-    return Response(cryptolist)
+
+    stopwords = {'name', 'symbol', 'price', ' ', ':', '{', '}', ','}
+
+    kolona = [word for word in re.split(",", cryptolist) if
+              word and word.lower() not in stopwords]  # filter out empty words
+
+    id = session.get("user_id")
+    user = User.query.get(id)
+    dicti = {
+        "amount": user.account.amount,
+        "records": len(kolona),
+        "colnames": kolona
+    }
+    redirect_BaseUrl = "http://127.0.0.1:5002/home"
+    redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+    return redirect(redirect_url)
 
 
-@app.route("/exchange", methods=["PATCH"])
+@app.route("/exchange", methods=["PATCH", "POST", "GET"])
 def exchange():
     selling = request.form["selling"]
     buying = request.form["buying"]
@@ -109,7 +124,13 @@ def exchange():
         else:
             cryptoCurrencyUpdate(buying, amount, crypto_currencies)
 
-        return Response(user.account.amount)
+        dicti = {
+            "code": 444,
+            "amount": user.account.amount
+        }
+        redirect_BaseUrl = "http://127.0.0.1:5002/home"
+        redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
+        return redirect(redirect_url)
 
 
 def gettingPrice(selling, buying):
@@ -164,6 +185,7 @@ def addingToList(data):
             "symbol": symbol,
             "price": price
         })
+        print(crypto_value_list)
     return crypto_value_list
 
 
@@ -223,7 +245,8 @@ def transfer_money_to_account():
         user.credit_card.money_amount -= amount
         user.account.amount += amount
         dicti = {
-            "amount":user.account.amount
+            "code": 444,
+            "amount": user.account.amount
         }
         db.session.commit()
         redirect_BaseUrl = "http://127.0.0.1:5002/home"
@@ -309,7 +332,7 @@ def start_transaction():
         id = session.get("user_id")
         user = User.query.get(id)
         currencies = user.account.crypto_currencies
-        balances = filter(lambda  a: a.name == currency and a.amount, currencies)
+        balances = filter(lambda a: a.name == currency and a.amount, currencies)
         balances = list(balances)
         if balances == []:
             return {"error": "Not enough funds"}
@@ -403,8 +426,12 @@ def login():
     user = User.query.get(id)
 
     dicti = {
-            "amount": user.account.amount
-        }
+        "code": 302,
+        "amount": user.account.amount,
+        "colnames": user.first_name,
+        "records": user.last_name
+    }
+
     redirect_BaseUrl = "http://127.0.0.1:5002/home"
     redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
     return redirect(redirect_url)
@@ -481,7 +508,8 @@ def change_user_data():
    # image.save(os.path.join(newpath + '\\' + image.filename))
 
     dicti = {
-         "amount":user.account.amount
+        "code": 444,
+        "amount": user.account.amount
     }
     redirect_BaseUrl = "http://127.0.0.1:5002/home"
     redirect_url = redirect_BaseUrl + ("?" + urlencode(dicti))
