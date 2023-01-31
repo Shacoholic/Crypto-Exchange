@@ -35,10 +35,11 @@
     }
 
     div.table {
+        overflow-y: scroll;
         vertical-align: top;
         background-color: rgba(98, 98, 98, 0.50);
         width: 50%;
-        height: 40%;
+        height: 80%;
         padding: 5px;
         display: inline-block;
         margin-left: 1.5%;
@@ -62,7 +63,8 @@
     div.buttons
     {
         width: 15%;
-        height: 405px;
+        height: 455px;
+        display: inline-block;
         margin-left: 82.5%;
     }
 
@@ -244,9 +246,10 @@
                         <input type="text" name="recipient">
                         <input type="number" name="transferAmount">
                         <select name="currencyTransfer">
-                            {% for crypto in crypto_currencies %}
-                                <option value="{{crypto.crypto_currency_name}}"></option>
-                            {% endfor %}
+                                <option>BC</option>
+                                <option>ETH</option>
+                                <option>USDT</option>
+                                <option>USDC</option>
                         </select>
                         <input type="submit" value="transfer">
                     <label id="to">Transfer to</label>
@@ -270,15 +273,17 @@
                     <input type="number" name="amount">
                     <select name="selling">
                             <option>USA</option>
-                        {% for crypto in crypto_currencies %}
-                            <option value="{{crypto.crypto_currency_name}}"></option>
-                        {% endfor %}
+                            <option>BC</option>
+                            <option>ETH</option>
+                            <option>USDT</option>
+                            <option>USDC</option>
                     </select>
                     <select name="buying">
                             <option>USA</option>
-                        {% for crypto in crypto_currencies %}
-                            <option value="{{crypto.crypto_currency_name}}"></option>
-                        {% endfor %}
+                            <option>BC</option>
+                            <option>ETH</option>
+                            <option>USDT</option>
+                            <option>USDC</option>
                     </select>
                     <input type="submit" value="exchange">
                 
@@ -293,8 +298,6 @@
         </div>
 
         <div class="table">
-            <form action="http://127.0.0.1:5000/showCryptoCurrencies">
-                <button type="submit" style="margin-left: 5px">REFRESH TABLE</button>
                 <div class="values">
                     <table>
                         <thead>
@@ -305,13 +308,32 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                                <tr>
+                                    <td>BC</td>
+                                    <td>Bitcoin</td>
+                                    <td>$22,771.15</td>
+                                </tr>
+                                <tr>
+                                    <td>ETH</td>
+                                    <td>Ethereum</td>
+                                    <td>$1,564.29</td>
+                                </tr>
+                                <tr>
+                                    <td>USDT</td>
+                                    <td>Tether</td>
+                                    <td>$1.00</td>
+                                </tr>
+                                <tr>
+                                    <td>USDC</td>
+                                    <td>USD Coin</td>
+                                    <td>$0.9999</td>
+                                
                         </tbody>
                     </table>
                 </div>
-            </form>
-            <div class="buttons">
+        <div class="buttons">
                 <button class="meni">All curency</button>
+                <br>
                 <br>
                 <form action="http://127.0.0.1:5002/transactions">
                 <button class="meni">My transactions</button>
@@ -323,7 +345,7 @@
                     </form>
                 <br>
                 <button class="meni">My crypto</button>
-            </div>
+        </div>
         </div>
     </div>
 </body>
